@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merowish Help Desk Support</title>
+<style>
+:root{
+  --bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#697386;
+  --border:#e5e9f0;--primary:#2563eb;--primary2:#1d4ed8;--success:#16a34a;
+  --shadow:0 10px 30px rgba(15,23,42,.07);--radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:1180px;margin:auto;padding:22px}
+.header{background:linear-gradient(135deg,#111827,#1e3a8a);color:#fff;border-radius:22px;padding:24px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.logo{width:46px;height:46px;border-radius:13px;background:#fff;color:#1d4ed8;display:grid;place-items:center;font-weight:900;font-size:19px}
+h1{font-size:24px;margin:0 0 3px}
+.subtitle{margin:0;color:#cbd5e1;font-size:13px}
+.search-wrap{position:relative}
+.search{width:100%;height:52px;border:0;border-radius:13px;padding:0 48px 0 46px;outline:none;color:#111827;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.12)}
+.search::placeholder{color:#9aa3b2}
+.search-icon{position:absolute;left:16px;top:15px;color:#64748b;font-size:20px}
+.clear{position:absolute;right:12px;top:9px;width:34px;height:34px;border:0;border-radius:9px;background:#eef2f7;color:#475569;display:none}
+.tabs{display:flex;gap:6px;margin:18px 0;background:#e9eef5;padding:5px;border-radius:14px;position:sticky;top:8px;z-index:20}
+.tab{flex:1;border:0;background:transparent;color:#64748b;padding:13px 10px;border-radius:10px;font-weight:750}
+.tab.active{background:#fff;color:var(--primary);box-shadow:0 3px 10px rgba(15,23,42,.08)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 12px;gap:12px}
+.section-title{font-size:20px;font-weight:800;margin:0}
+.count{font-size:12px;color:var(--muted);background:#e9eef5;padding:6px 10px;border-radius:999px}
+.cards{display:grid;gap:13px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 5px 18px rgba(15,23,42,.035);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px;cursor:pointer}
+.title-area{min-width:0}
+.card-title{font-weight:800;font-size:15px;margin:0;word-break:break-word}
+.badge{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#2563eb;background:#eff6ff;border-radius:999px;padding:4px 7px;margin-bottom:7px}
+.actions{display:flex;gap:7px;flex-shrink:0}
+.icon-btn{border:1px solid var(--border);background:#fff;color:#475569;border-radius:9px;width:36px;height:36px;display:grid;place-items:center}
+.icon-btn:hover{background:#f8fafc}
+.copy-btn{width:auto;padding:0 12px;display:flex;gap:6px;align-items:center;font-size:12px;font-weight:750}
+.copy-btn.copied{background:#ecfdf5;border-color:#bbf7d0;color:var(--success)}
+.social-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px solid var(--border)}
+.social-btn{border:1px solid var(--border);background:#fff;color:#334155;border-radius:9px;min-height:36px;padding:0 10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:750;transition:.15s}
+.social-btn:hover{background:#f8fafc;transform:translateY(-1px)}
+.social-btn .social-icon{font-size:16px;font-weight:900}
+.social-btn.whatsapp{color:#15803d}.social-btn.instagram{color:#c026d3}.social-btn.tiktok{color:#111827}.social-btn.viber{color:#6d28d9}
+.social-note{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.45}
+.chevron{transition:.2s}
+.card.open .chevron{transform:rotate(180deg)}
+.card-body{display:none;border-top:1px solid var(--border);padding:16px 17px;background:#fcfdff}
+.card.open .card-body{display:block}
+.description{font-size:14px;line-height:1.7;white-space:pre-wrap;color:#334155;word-break:break-word}
+.description a{color:var(--primary);font-weight:650}
+.qr-image{display:block;width:min(330px,100%);max-height:430px;object-fit:contain;margin:0 auto 17px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:zoom-in}
+.image-note{text-align:center;color:var(--muted);font-size:11px;margin-top:-10px;margin-bottom:12px}
+.empty{text-align:center;background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:42px 20px;color:var(--muted)}
+.empty strong{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
+mark{background:#fef08a;color:inherit;border-radius:3px;padding:0 2px}
+.footer{text-align:center;color:#8a94a6;font-size:11px;padding:28px 0 8px}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.78);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal img{max-width:95vw;max-height:90vh;border-radius:12px;background:#fff}
+.modal-close{position:fixed;right:20px;top:18px;border:0;background:#fff;color:#111827;width:40px;height:40px;border-radius:50%;font-size:22px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#111827;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:120}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:650px){
+  .app{padding:12px}.header{padding:18px;border-radius:17px}
+  h1{font-size:20px}.tabs{top:4px}.tab{font-size:12px;padding:12px 5px}
+  .card-head{padding:14px}.actions .copy-btn span{display:none}.copy-btn{width:36px;padding:0;justify-content:center}
+  .social-btn{flex:1;min-width:72px;padding:0 7px}
+  .toolbar{margin-top:15px}.section-title{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <div class="logo">MW</div>
+      <div>
+        <h1>Merowish Help Desk</h1>
+        <p class="subtitle">Internal customer support quick-reply center</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search" class="search" type="search" placeholder="Search anything in Help Desk...  (Ctrl + K)" autocomplete="off">
+      <button id="clear" class="clear" title="Clear search">×</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Help Desk sections">
+    <button class="tab active" data-section="quick">Quick Reply</button>
+    <button class="tab" data-section="faq">General FAQ</button>
+    <button class="tab" data-section="call">On Call</button>
+  </nav>
+
+  <main>
+    <div class="toolbar">
+      <h2 id="sectionTitle" class="section-title">Quick Reply</h2>
+      <span id="count" class="count">0 replies</span>
+    </div>
+    <div id="cards" class="cards"></div>
+  </main>
+
+  <div class="footer">Merowish Int'l Logistic • Internal Help Desk Support</div>
+</div>
+
+<div id="modal" class="modal">
+  <button id="modalClose" class="modal-close">×</button>
+  <img id="modalImg" src="" alt="Payment QR">
+</div>
+<div id="toast" class="toast">Copied to clipboard</div>
+
+<script>
+const DATA = {
+  quick: [
+    {
+      title:"How To Order",
+      description:`https://youtube.com/shorts/V66zLLi5BTM?si=xTz5uBXrCiAKtc9y
+
+*How to Order From India 🇮🇳 & Get Delivery In Nepal* 🇳🇵
+
+Ordering is now easier:
+🌐 Download *Merowish* App
+📝 Create an Account & Place *Order*
+💳 Confirm Order via 25% Advance via FonePay QR & 75% Cash On Delivery.
+
+🚚 Get Delivered Anywhere in Nepal with Full Tracking Information.
+
+📲 App Link :
+https://merowish.com/getApp
+
+*Merowish Int'l Logistic*
+_You Wish It, We Deliver It_`
+    },
+    {
+      title:"Quotation Sent",
+      description:`Dear customer,
+📝Quotation has been sent.
+
+Please login to your account at MeroWish to check and proceed with payment 💳.
+
+📦 So we could proceed with order confirmation. Please note quotations are valid until the price changes at Vendor side.
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Manual Order",
+      description:`Dear customer,
+Please do share product link of your product which you wish to get delivered in Nepal. So we could check and share the total cost amount here on chat.
+
+Waiting for your response 😇🙏🏻
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Siddharth Bank QR",
+      image:"https://raw.githubusercontent.com/wishnepal/admin/refs/heads/main/IMG-20260801-WA0000(1).jpg",
+      description:`Dear customer,
+
+You can pay 25% as advance payment for order confirmation.
+
+💵 Rest of the 75% will be collected as cash on delivery.
+
+Note : Please share payment screenshot along with your delivery address 🚚📦
+
+Thank You 😇
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"NepalPay QR",
+      image:"https://raw.githubusercontent.com/wishnepal/admin/refs/heads/main/IMG-20260802-WA0022(1).jpg",
+      description:`Dear customer,
+
+You can pay 25% as advance payment for order confirmation.
+
+💵 Rest of the 75% will be collected as cash on delivery.
+
+Note : Please share payment screenshot along with your delivery address 🚚📦
+
+Thank You 😇
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"FonePay QR 5000",
+      image:"https://raw.githubusercontent.com/wishnepal/admin/refs/heads/main/IMG-20260801-WA0002.jpg",
+      description:`Dear customer,
+
+You can pay 25% as advance payment for order confirmation.
+
+💵 Rest of the 75% will be collected as cash on delivery.
+
+Note : Please share payment screenshot along with your delivery address 🚚📦
+
+Thank You 😇
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Esewa Payment QR",
+      image:"https://raw.githubusercontent.com/wishnepal/admin/refs/heads/main/IMG-20260809-WA0019.jpg",
+      description:`Dear customer,
+
+You can pay 25% as advance payment for order confirmation.
+
+💵 Rest of the 75% will be collected as cash on delivery.
+
+Note : Please share payment screenshot along with your delivery address 🚚📦
+
+Thank You 😇
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Arrival Date",
+      description:`Dear customer,
+
+Your Order has been confirmed already at seller. It takes 10 to 12 working days depending on seller, from the date of Booking except public holidays.
+
+📦 You can contact us on 9th day from the Booking Date to know the actual status of the shipment. We request you to please check your booking date and ETA.
+
+🌐 Tracking Information will be updated once it arrives at our warehouse from the seller.
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Delivery Time",
+      description:`Dear customer,
+
+📦 It takes 10 to 12 working days depending on seller, from the date of Booking except public holidays.
+
+🌐 Tracking Information will be updated once it arrives at our warehouse from the seller.
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Track My Order",
+      description:`Dear customer,
+
+📦 You can Track your Order at Merowish App if you had ordered through App, All Tracking Information will be updated at Merowish.
+
+📦 If your ordered placed on WhatsApp, Please share your order number so we could check the details for your order.
+
+Note : It takes 10 to 12 working days depending on seller, from the date of Booking except public holidays.
+
+🌐 Tracking Information will be updated once it arrives at our warehouse from the seller.
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Return Policy",
+      description:`Dear customer,
+Please refer to return policy page for all information regarding after purchase.
+
+*Return Policy*
+https://merowish.com/returnpolicy
+
+*Terms & Conditions*
+https://merowish.com/termsofuse
+
+Regards
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Third Party Websites / 3rd Party",
+      description:`Dear customer,
+
+We don’t operate third-party websites. Most Indian third-party sites take advance payments but fail to deliver/refund.
+
+🔍 Safer Option: Please Prefer To Use
+Amazon.in,
+Flipkart.com,
+Myntra.com,
+Ajio.com,
+Nykaa.com, etc.
+
+⚠️ If you still want to proceed with a untrusted third-party link, we’ll book your order but can’t guarantee delivery/refunds.
+
+📑 Review our policy before confirming:
+🔗https://merowish.com/returnpolicy
+
+Thanks! 😊
+MeroWish Int'l Logistic
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    }
+  ],
+  faq: [
+    {
+      title:"Combined Shipping",
+      description:`Dear customer,
+It depends on several factors. Combined shipping is possible in these 3 scenarios.
+
+✅ Same Seller & Location
+✅ Same Delivery Date
+✅ Single Product Weight Doesn't Exceed 0.5 kgs
+
+If these factors meets on your order then please let us know we will check and share combined shipping discount cost. 📦
+
+Regards
+Merowish Int'l Logistic
+You Wish It, We Deliver It 📦 🥳 🎉`
+    },
+    {
+      title:"Office Location",
+      description:`Dear customer,
+We're an Online Tech Based Registered Company in Nepal. Our office is located at Buddhanagar, Kathmandu.
+
+We request you to drop your any queries via email at support@merowish.com
+
+Note : Visitors were not allowed, All Order and Delivery Process were available online at Website. Please follow the process to get your order delivered 📦😇🙏🏻
+
+Regards
+Merowish Int'l Logistic
+Buddhanagar, Kathmandu
+
+You Wish it, We Deliver It! ✨🎊🛒🎁🛍`
+    },
+    {
+      title:"Platform Fees",
+      description:`Platforms Hidden Charges Per Order
+
+Important: Hidden Charges on Online Shopping Platforms 💸
+
+- Amazon: ₹11 COD 🛍️
+- Flipkart: ₹14 COD 🛍️
+- Myntra: ₹33 COD 🛍️
+- Ajio: ₹99 🛍️
+- Zara : ₹290 for Order Value Below INR 2990 🛍️
+- Uniqlo : ₹250 for Order Value Below INR 2990 🛍️
+
+This fees will be included in Item Price INR purchase cost 📦
+
+Thank you for your understanding! 😇🙏🏻`
+    }
+  ],
+  call: [
+    {
+      title:"How To Buy / Order Kasari Garne - On Call Only",
+      description:`Namaste, Merowish.
+Sir / Ma'am. Hajurle hamro website Merowish.com ma gayera order create garna saknu hunexa. Or Hajur le hamro yehi number ko WhatsApp Chat support ma link share garera Quotation lina saknu hunexa. K kati kharcha lagxa vanera.`
+    },
+    {
+      title:"Delivery Kati Din Ma Hunxa. - On Call Only",
+      description:`Sir / Ma'am hamro delivery Time hajur le order confirm garnu vako din dekhi Generally 8-10 din ma Nepal aai pugxa. hamro logistic bta call aauxa hajur lae ani Home Delivery Garai dinxau hami`
+    },
+    {
+      title:"Payment Kasari Garne. - On Call Only",
+      description:`Sir / Ma'am Hajurle Esewa, Khalti, Mobile Banking, Fonepay QR marfat garna saknu hunexa`
+    },
+    {
+      title:"NO Full COD - On Call Only",
+      description:`Sir / Ma'am Hamro ma 25% Advance garera hajur le booking garauna saknu hunexa, Rest of the 75% Cash On Delivery Janxa, Sorry sir hamro ma minimum 25% Advance matra xa, hajurko product ko lagi hami le India ko seller lae Full Payment garera nae import garnu parne hunxa still we provide 25% Advance facility to our customer`
+    },
+    {
+      title:"Dherai Saman Magauda = On Call Only",
+      description:`Sir / Ma'am, Hamro Merowish ko through hajur le eutai saman multiple order garera shipping ma discount pauna saknu hunexa, For example euta product same seller bta within 500 gram wa 1kg ma 5-6 ota aai araxa vane hajur le auta shipping amount ma multile items lina milxa but if product wa seller farak farak xa vane, Xutta xuttai shipping charge lagne hunxa sir / ma'am, parcel seperatly aauxa, Delivery date haru farak farak huna le.`
+    }
+  ]
+};
+
+const labels={quick:"Quick Reply",faq:"General FAQ",call:"On Call"};
+let current="quick";
+const search=document.getElementById("search");
+const cards=document.getElementById("cards");
+const count=document.getElementById("count");
+const sectionTitle=document.getElementById("sectionTitle");
+const clearBtn=document.getElementById("clear");
+const toast=document.getElementById("toast");
+const modal=document.getElementById("modal");
+const modalImg=document.getElementById("modalImg");
+
+function escapeHTML(str){
+  return str.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function highlight(str,q){
+  const safe=escapeHTML(str);
+  if(!q)return safe;
+  const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  return safe.replace(re,"<mark>$1</mark>");
+}
+function linkify(text,q){
+  let html=highlight(text,q);
+  const urlRe=/(https?:\/\/[^\s<]+)/g;
+  return html.replace(urlRe,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+}
+function copyText(item,btn){
+  navigator.clipboard.writeText(item.description).then(()=>{
+    btn.classList.add("copied");
+    btn.innerHTML="✓ <span>Copied</span>";
+    showToast("Reply copied to clipboard");
+    setTimeout(()=>{btn.classList.remove("copied");btn.innerHTML="⧉ <span>Copy</span>"},1400);
+  }).catch(()=>{
+    const ta=document.createElement("textarea");ta.value=item.description;document.body.appendChild(ta);
+    ta.select();document.execCommand("copy");ta.remove();
+    showToast("Reply copied to clipboard");
+  });
+}
+function showToast(msg){
+  toast.textContent=msg;toast.classList.add("show");
+  clearTimeout(window.__toast);window.__toast=setTimeout(()=>toast.classList.remove("show"),1600);
+}
+async function shareSocial(platform,item){
+  const text = item.description;
+  const targetName = platform==="whatsapp" ? "WhatsApp" :
+                     platform==="instagram" ? "Instagram" :
+                     platform==="tiktok" ? "TikTok" : "Viber";
+
+  // If a QR/image exists, try the native Web Share API with the actual image file.
+  // This is the only reliable browser-level way to send BOTH text and an image
+  // into a supported native/social sharing sheet.
+  if(item.image && navigator.share && navigator.canShare){
+    try{
+      showToast("Preparing image for " + targetName + "…");
+
+      const response = await fetch(item.image, {mode:"cors", cache:"no-cache"});
+      if(!response.ok) throw new Error("Image request failed");
+
+      const blob = await response.blob();
+      const extension = blob.type==="image/png" ? "png" :
+                        blob.type==="image/webp" ? "webp" : "jpg";
+      const file = new File([blob], (item.title.replace(/[^a-z0-9]+/gi,"_").toLowerCase() || "payment_qr") + "." + extension, {
+        type: blob.type || "image/jpeg"
+      });
+
+      const shareData = {
+        title: item.title,
+        text: text,
+        files: [file]
+      };
+
+      if(navigator.canShare({files:[file]})){
+        await navigator.share(shareData);
+        showToast("Shared with image + message");
+        return;
+      }
+    }catch(err){
+      // User cancellation is normal; don't show an error.
+      if(err && err.name==="AbortError") return;
+      console.warn("Image share unavailable:", err);
+    }
+  }
+
+  // Normal text-only fallback.
+  const encoded = encodeURIComponent(text);
+
+  if(platform==="whatsapp"){
+    window.open("https://wa.me/?text="+encoded,"_blank","noopener");
+    showToast("WhatsApp opened with message. Attach the QR image if needed.");
+  }else if(platform==="viber"){
+    window.open("viber://forward?text="+encoded,"_blank","noopener");
+    showToast("Viber opened with message. Attach the QR image if needed.");
+  }else{
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch{
+      const ta=document.createElement("textarea");
+      ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+    }
+
+    const url = platform==="instagram"
+      ? "https://www.instagram.com/direct/inbox/"
+      : "https://www.tiktok.com/messages";
+
+    window.open(url,"_blank","noopener");
+    showToast(targetName+" opened — message copied. Attach QR image if needed.");
+  }
+}
+function render(){
+  const q=search.value.trim();
+  const items=DATA[current].filter(x=>(x.title+" "+x.description).toLowerCase().includes(q.toLowerCase()));
+  sectionTitle.textContent=labels[current];
+  count.textContent=`${items.length} ${items.length===1?"reply":"replies"}`;
+  clearBtn.style.display=q?"block":"none";
+  if(!items.length){
+    cards.innerHTML=`<div class="empty"><strong>No matching reply found</strong>Try another keyword, title, platform, payment method, or phrase.</div>`;
+    return;
+  }
+  cards.innerHTML=items.map((item,i)=>`
+    <article class="card ${q?'open':''}" data-index="${i}">
+      <div class="card-head">
+        <div class="title-area">
+          <span class="badge">${labels[current]}</span>
+          <h3 class="card-title">${highlight(item.title,q)}</h3>
+        </div>
+        <div class="actions">
+          <button class="icon-btn copy-btn" title="Copy reply">⧉ <span>Copy</span></button>
+          <button class="icon-btn chevron" title="Expand">⌄</button>
+        </div>
+      </div>
+      <div class="card-body">
+        ${item.image?`<img class="qr-image" src="${item.image}" alt="${escapeHTML(item.title)}" loading="lazy" title="Click to enlarge">`:''}
+        ${item.image?`<div class="image-note">Tap QR image to enlarge</div>`:''}
+        ${current==="quick"?`
+          <div class="social-actions">
+            <button class="social-btn whatsapp" data-social="whatsapp" title="Share directly through WhatsApp"><span class="social-icon">◉</span> WhatsApp</button>
+            <button class="social-btn instagram" data-social="instagram" title="Open Instagram DM and copy message"><span class="social-icon">◎</span> Instagram</button>
+            <button class="social-btn tiktok" data-social="tiktok" title="Open TikTok messages and copy message"><span class="social-icon">♪</span> TikTok</button>
+            <button class="social-btn viber" data-social="viber" title="Share through Viber"><span class="social-icon">✆</span> Viber</button>
+          </div>
+          <div class="social-note">${item.image
+  ? "QR replies: on supported mobile browsers, Share sends the QR image + message together through the native share sheet."
+  : "WhatsApp/Viber can prefill the message. Instagram and TikTok open messages with the reply copied, ready to paste."
+}</div>
+        `:''}
+        <div class="description">${linkify(item.description,q)}</div>
+      </div>
+    </article>
+  `).join("");
+
+  [...cards.querySelectorAll(".card")].forEach(card=>{
+    const idx=Number(card.dataset.index),item=items[idx];
+    card.querySelector(".card-head").addEventListener("click",e=>{
+      if(e.target.closest(".copy-btn"))return;
+      card.classList.toggle("open");
+    });
+    card.querySelector(".copy-btn").addEventListener("click",e=>{
+      e.stopPropagation();copyText(item,e.currentTarget);
+    });
+    card.querySelectorAll(".social-btn").forEach(btn=>{
+      btn.addEventListener("click",e=>{
+        e.stopPropagation();
+        shareSocial(btn.dataset.social,item);
+      });
+    });
+    const img=card.querySelector(".qr-image");
+    if(img)img.addEventListener("click",e=>{
+      e.stopPropagation();modalImg.src=item.image;modal.classList.add("show");
+    });
+  });
+}
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    tab.classList.add("active");
+    current=tab.dataset.section;
+    render();
+    window.scrollTo({top:document.querySelector(".tabs").offsetTop-8,behavior:"smooth"});
+  });
+});
+search.addEventListener("input",render);
+clearBtn.addEventListener("click",()=>{search.value="";search.focus();render()});
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();search.focus()}
+  if(e.key==="Escape"){modal.classList.remove("show");search.value="";render()}
+});
+document.getElementById("modalClose").addEventListener("click",()=>modal.classList.remove("show"));
+modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")});
+render();
+</script>
+</body>
+</html>
