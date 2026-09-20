@@ -480,7 +480,6 @@ body.dark .flow-code{color:#b5a8ff}
 .flow-chip:hover .flow-code{color:var(--accent)}
 body.dark .flow-chip:hover .flow-code{color:#fff}
 
-/* index strip */
 .flow-index{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
@@ -526,10 +525,13 @@ body.dark .flow-chip:hover .flow-code{color:#fff}
   .flow-index{grid-template-columns:1fr}
 }
 
-/* ===== MOBILE-FIRST OVERRIDES ===== */
-html{overflow-x:hidden}
-body{overflow-x:hidden;-webkit-text-size-adjust:100%;}
+/* ============================================================
+   ===== MOBILE-FIRST OVERRIDES (fixed scroll) =====
+   ============================================================ */
+html{overflow-x:clip}
+body{overflow-x:clip;-webkit-text-size-adjust:100%;}
 button,a,input{touch-action:manipulation}
+
 @media (max-width: 700px){
   .shell{width:100%;padding:8px 12px 40px}
   .header{gap:14px;padding:14px 2px 12px}
@@ -638,18 +640,17 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
 
   html{scroll-padding-top:118px}
   body{
-    padding-top:calc(var(--appbar-h) + env(safe-area-inset-top));
-    padding-bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom) + 10px);
+    padding-top:calc(var(--appbar-h) + env(safe-area-inset-top, 0px));
+    padding-bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px) + 10px);
     -webkit-tap-highlight-color:transparent;
-    overscroll-behavior-y:none;
   }
   button,a{-webkit-tap-highlight-color:transparent}
 
   /* ---- Fixed app bar ---- */
   .mobile-appbar{
     display:flex;position:fixed;top:0;left:0;right:0;z-index:300;
-    height:calc(var(--appbar-h) + env(safe-area-inset-top));
-    padding:env(safe-area-inset-top) 14px 0;
+    height:calc(var(--appbar-h) + env(safe-area-inset-top, 0px));
+    padding:env(safe-area-inset-top, 0px) 14px 0;
     align-items:center;justify-content:space-between;gap:10px;
     background:var(--header-bg);
     -webkit-backdrop-filter:blur(20px) saturate(180%);
@@ -680,7 +681,7 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
 
   /* ---- Sticky search under app bar ---- */
   .search-shell{
-    top:calc(var(--appbar-h) + env(safe-area-inset-top));
+    top:calc(var(--appbar-h) + env(safe-area-inset-top, 0px));
     margin:0 -12px;padding:8px 12px 9px;
   }
   .searchbar{min-height:46px;border-radius:14px}
@@ -708,8 +709,8 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
   /* ---- Bottom tab bar (6 items) ---- */
   .bnav{
     display:flex;position:fixed;left:0;right:0;bottom:0;z-index:310;
-    height:calc(var(--bnav-h) + env(safe-area-inset-bottom));
-    padding:0 3px env(safe-area-inset-bottom);
+    height:calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px));
+    padding:0 3px env(safe-area-inset-bottom, 0px);
     background:var(--header-bg);
     -webkit-backdrop-filter:blur(22px) saturate(180%);
     backdrop-filter:blur(22px) saturate(180%);
@@ -736,7 +737,7 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
   /* ---- Scroll-to-top FAB ---- */
   .fab-top{
     display:grid;place-items:center;position:fixed;
-    right:14px;bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom) + 14px);
+    right:14px;bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px) + 14px);
     width:44px;height:44px;border-radius:50%;
     border:1px solid var(--line);background:var(--panel);color:var(--text);
     font-size:17px;line-height:1;z-index:290;box-shadow:var(--shadow);
@@ -747,7 +748,7 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
   .fab-top:active{transform:scale(.88)}
 
   .rules{margin-bottom:6px}
-  .toast{bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom) + 22px)}
+  .toast{bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom, 0px) + 22px)}
 
   .searchbar:focus-within{
     border-color:var(--accent);
@@ -955,7 +956,7 @@ body.dark .toast{background:#f4f6f8;color:#10141b}
     <div>
       <div class="brand-line"><span class="brand-dot"></span> Creator Reference Library</div>
       <h1>Merowish Creative shortcuts, <span class="gradient">without the guesswork.</span></h1>
-    
+      
     </div>
     <div class="header-actions">
       <div class="stats">
@@ -3128,7 +3129,6 @@ function runSearch(autoJump=true) {
     if (show && q) total++;
   });
 
-  // Hide empty flow categories when searching
   document.querySelectorAll('.flow-category').forEach(sec => {
     const visible = sec.querySelectorAll('.searchable:not(.hidden)').length;
     sec.style.display = (q && visible === 0) ? 'none' : '';
